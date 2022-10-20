@@ -1,0 +1,20 @@
+[
+    {
+        "role": "User",
+        "access": {
+            "lecture": "R"
+        }
+    },
+    {
+        "role": "Writer",
+        "access": {
+            "lecture": "CRUD"
+        }
+    },
+    {
+        "role": "Admin",
+        "access": {
+            "lecture": "D"
+        }
+    }
+]
