@@ -9,8 +9,9 @@ const Authmiddleware = require("../middleware/Authentication")
 
 const app = express.Router()
 
-app.get("/", Authmiddleware, (req, res) => {
-    res.send("Welcome to user page")
+app.get("/", Authmiddleware, async(req, res) => {
+    let a=await UserModel.find()
+   return  res.send(a)
 })
 
 app.post("/signup", async (req, res) => {
@@ -23,7 +24,9 @@ app.post("/signup", async (req, res) => {
         }
         let newUser = new UserModel({ name, email, password, role })
         await newUser.save();
-        res.status(200).send("user created successflly")
+        console.log(newUser)
+        res.status(200).send(newUser)
+        
     } catch (er) {
         return res.status(500).send(er.message)
     }
@@ -51,7 +54,7 @@ app.post("/login", async (req, res) => {
 
     const refreshToken = jwt.sign({}, refreshKey, { expiresIn: "7 days" })
 
-    res.status(200).send({ msg: "Login success fully created", token: token, rtoken: refreshToken })
+    res.status(200).send({ msg: "Login success fully created", token: token, rtoken: refreshToken , user:user.name, _id:user._id})
 })
 
 

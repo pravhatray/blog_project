@@ -5,13 +5,15 @@ import Home from '../home/Home'
 import Signup from '../register/Signup'
 
 import Navbar from '../navbar/Navbar'
+import Create from '../AddBlog/Create'
 const AllRoute = () => {
   return (
     <Box>
         <Navbar/>
         <Routes>
             <Route path="/" element={<Home/>} />
-            <Route path="/signup" element={<Signup/>} />
+           
+            <Route path="/create" element={<Create/>} />
          
            
 

@@ -47,9 +47,9 @@ const Draw = () => {
 
           <DrawerBody>
           
-          <Tabs onChange={(index) => setTabIndex(index)} bg={bg}  variant='enclosed'>
+          <Tabs onChange={(index) => setTabIndex(index)} bg={bg}  variant='enclosed' height="full">
       <TabList>
-        <Tab _selected={{ color: 'white', bg: 'red.300' }}><Text fontSize={"xl"}  >
+        <Tab   _selected={{ color: 'white', bg: 'red.300' }}><Text fontSize={"xl"}  >
           Signup
           </Text></Tab>
      
@@ -64,13 +64,7 @@ const Draw = () => {
       </TabPanels>
     </Tabs>
           </DrawerBody>
-{/* 
-          <DrawerFooter>
-            <Button variant='outline' mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button colorScheme='blue'>Save</Button>
-          </DrawerFooter> */}
+
         </DrawerContent>
       </Drawer>
     </Box>
