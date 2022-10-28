@@ -13,31 +13,94 @@ import {
   SimpleGrid,
   useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import React, { useState } from "react";
 import Typical from "react-typical";
-import styles from "./Create.module.css"
+import styles from "./Create.module.css";
 
 const Create = () => {
-
   const token = JSON.parse(localStorage.getItem("token")).token || "";
 
-  const [imageUrl, setImageUrl] = useState("")
-  const toast = useToast()
-  const [form,setForm] = useState({
-    title:"",
-    content:"",
-     avatar:""
-  })
+  const [imageUrl, setImageUrl] = useState("");
+  const [title,setTitle]=useState("")
+const [content,setContent]=useState("")
+  const toast = useToast();
+  const [form, setForm] = useState({
+    title: "",
+    content: "",
+    avatar: "",
+  });
 
-  const handleChange=(e)=>{
-    const {name,value,type}=e.target
+
+var img;
+
+  const postDetails = (imageUrl) => {
+
+    if (imageUrl === undefined) {
+      toast({
+        title: "Please seclect an Image!",
+        description: "warning",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
+
+    if (imageUrl.type === "image/jpeg" || imageUrl.type === "image/png" || imageUrl.type === "image/jpg") {
+      const data = new FormData();
+      data.append("file", imageUrl);
+      data.append("upload_preset", "data-storage");
+      data.append("cloud_name", "dztva4gbe");
+      fetch("https://api.cloudinary.com/v1_1/dztva4gbe/image/upload", {
+        method: "post",
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setImageUrl(data.url.toString());
+          console.log(data);
+          console.log(data.url.toString())
+          return {
+            data:data.url.toString()
+
+          }
+        })
+        .catch((er) => {
+          console.log(er);
+        });
+    } else {
+      toast({
+        title: "Please seclect an Image!",
+        description: "wraning",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
+  };
+
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
     
-  }
-
+    axios
+      .post("http://localhost:8080/posts", {title:title,content:content,avatar:imageUrl}, {
+        headers: {
+          authorization: token,
+        },
+      })
+      .then((res) => {
+        toast("Blog created ");
+      });
+  };
 
   return (
     <>
-   
       <Box bg={"#fae8ff "}>
         <Text fontSize={"xl"} fontWeight="medium" color={"teal"}>
           Welcome!!!
@@ -50,7 +113,7 @@ const Create = () => {
       <Box bg={"#fae8ff "}>
         <Hide below="md">
           <Text fontWeight="normal" fontSize="1.5rem" color={"orange"}>
-            <h1 style={{textDecoration:"underline"}} >
+            <h1 style={{ textDecoration: "underline" }}>
               <Typical
                 loop={Infinity}
                 steps={[
@@ -67,24 +130,59 @@ const Create = () => {
         </Hide>
       </Box>
 
-      <Box m="auto" mt={"6"} p="5%" w="95%" className={styles.form}   >
-        <FormControl>
-          <SimpleGrid columns={[1,2,2,2]} gap={["5%","10%"]}>
+      <Box m="auto" mt={"6"} p="5%" w="95%" className={styles.form}>
+        <form onSubmit={handleSubmit}>
+          <SimpleGrid columns={[1, 2, 2, 2]} gap={["5%", "10%"]}>
             <Box>
-            <FormLabel textColor={"yellow"}  mb={5}>TITLE</FormLabel>
-          <Input mb={5} bgColor={"white"} type="text" required="required" placeholder="Title of the blog " />
-          <FormLabel  textColor={"yellow"} mb={5}>PICTURE</FormLabel>
-          <Input mb={5} bgColor={"white"} type="file" required="required" placeholder="email" />
-          
+              <FormLabel textColor={"yellow"} mb={5}>
+                TITLE
+              </FormLabel>
+              <Input
+                mb={5}
+                bgColor={"white"}
+                type="text"
+                required="required"
+                placeholder="Title of the blog "
+                onChange={(e)=>setTitle(e.target.value)}
+                name="title"
+                
+              />
+              <FormLabel textColor={"yellow"} mb={5}>
+                PICTURE
+              </FormLabel>
+              <Input
+                mb={5}
+                bgColor={"white"}
+                type="file"
+                required="required"
+              
+                onChange={(e)=>postDetails(e.target.files[0])}
+                name="avatar"
+              />
             </Box>
-            <Box >
-            <FormLabel  textColor={"yellow"} mb={5}>CONTENT</FormLabel>
-              <Textarea textColor={""} height={"150px"} type="text" required="required"  bgColor={"white "} placeholder="Content of the blog" size={"lg"} />
+            <Box>
+              <FormLabel textColor={"yellow"} mb={5}>
+                CONTENT
+              </FormLabel>
+              <Textarea
+                textColor={""}
+                height={"150px"}
+                type="text"
+                required="required"
+                bgColor={"white "}
+                placeholder="Content of the blog"
+                size={"lg"}
+                onChange={(e)=>setContent(e.target.value)}
+                name="content"
+              
+              />
             </Box>
-          </SimpleGrid >
-          
-          <Button  colorScheme='blue' w="56%" mt={["20%","5%"]} type="submit" >Click for Creating Your Blog</Button>
-        </FormControl>
+          </SimpleGrid>
+
+          <Button colorScheme="blue" w="56%" mt={["20%", "5%"]} type="submit">
+            Click for Creating Your Blog
+          </Button>
+        </form>
       </Box>
     </>
   );
