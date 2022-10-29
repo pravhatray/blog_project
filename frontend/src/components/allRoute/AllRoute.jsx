@@ -15,12 +15,9 @@ const AllRoute = () => {
         <Routes>
             <Route path="/" element={<Home/>} />
             <Route path="/authorsposts" element={<Author/>} />
-            <Route path="/readmore" element={<ReadMore/>} />
+            <Route path="/readmore/:id" element={<ReadMore/>} />
             <Route path="/create" element={<Create/>} />
-         
-           
-
-        </Routes>
+   </Routes>
     </Box>
   )
 }

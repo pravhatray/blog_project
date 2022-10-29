@@ -9,7 +9,9 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { writerId } from "../../store/auth/Auth.action";
 import blog from "./images/Blog_logo_Header.jpg";
 
 // const blogs=[
@@ -56,6 +58,8 @@ const Home = () => {
   const token = JSON.parse(localStorage.getItem("token")) || "";
 
   const [blogs, setBlogs] = useState([]);
+  const dispatch = useDispatch();
+  const id = useSelector((store) => store.auth.id);
 
   function truncate(str, no_words) {
     return str.split(" ").splice(0, no_words).join(" ");
@@ -66,7 +70,16 @@ const Home = () => {
       setBlogs(res.data);
     });
   }, []);
+
+
   // console.log(blogs[0].userId.name);
+
+
+  const getAuthorsdata = (id) => {
+    dispatch(writerId(id));
+  };
+
+
   return (
     <>
       <Box mt={2}>
@@ -120,10 +133,17 @@ const Home = () => {
                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHUvOd8Q-VihyupbJCdgjIR2FxnjGtAgMu3g&usqp=CAU"
                   />
                   <Box ml="3">
-                    <Text fontWeight="bold">
+                    <Link to="/authorsposts">
+                     <Text 
+                      onClick={() => {
+                        getAuthorsdata(b.userId._id);
+                      }}
+                     fontWeight="bold">
                       {b.userId.name}
                      
                     </Text>
+                    </Link>
+                   
                     <Badge ml="1" colorScheme="green">
                         {b.created_at.split("T")[0]}
                       </Badge>
@@ -142,8 +162,10 @@ const Home = () => {
                   >
                     {truncate(b.content, 40)}
                   </Text>
-                  <Link to="/readmore"><Text textDecoration={"underline"} color="blue" >Read more....
-                    </Text></Link>
+                  <Link to={`/readmore/${b._id}`} >
+                    <Text textDecoration={"underline"} color="blue" >Read more....
+                    </Text>
+                    </Link>
                 </Box>
               </Box>
             </>

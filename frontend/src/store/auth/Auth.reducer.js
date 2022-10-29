@@ -5,6 +5,7 @@ import {
   AUTH_SIGNUP_ERROR,
   AUTH_SIGNUP_LOADING,
   AUTH_SIGNUP_SUCCESS,
+  getWriterId,
   LOGOUT_SUCCESS,
 } from "./Auth.types";
 
@@ -14,6 +15,7 @@ const initalState = {
   loading: false,
   error: false,
   username: "",
+  id: ""
 };
 
 export const authReducer = (state = initalState, { type, payload }) => {
@@ -77,6 +79,13 @@ export const authReducer = (state = initalState, { type, payload }) => {
         username: "",
       };
     }
+
+    case getWriterId: {
+      localStorage.setItem("id", payload)
+      return {
+          ...state, id: payload
+      }
+  }
 
     default: {
       return state;
