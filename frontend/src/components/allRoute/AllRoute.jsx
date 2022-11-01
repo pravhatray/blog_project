@@ -8,6 +8,7 @@ import Navbar from '../navbar/Navbar'
 import Create from '../AddBlog/Create'
 import Author from '../authorsPosts/Author'
 import ReadMore from '../singlePost/ReadMore'
+import Chat from '../chat/Chat'
 const AllRoute = () => {
   return (
     <Box>
@@ -17,6 +18,7 @@ const AllRoute = () => {
             <Route path="/authorsposts" element={<Author/>} />
             <Route path="/readmore/:id" element={<ReadMore/>} />
             <Route path="/create" element={<Create/>} />
+            <Route path="/chat" element={<Chat/>} />
    </Routes>
     </Box>
   )

@@ -9,7 +9,7 @@ import logo from "./images/blog_logo.jpg";
 const Navbar = () => {
   const username = useSelector((store) => store.auth);
   const token = JSON.parse(localStorage.getItem("token"));
-  console.log("localtoken", token);
+  // console.log("localtoken", token);
 
   const dispatch = useDispatch();
 
@@ -26,6 +26,9 @@ const Navbar = () => {
           </NavLink>
           <NavLink to="/create">
             <Button colorScheme={"red"}>Start Blogging</Button>
+          </NavLink>
+          <NavLink to="/chat">
+            <Button colorScheme={"blue"}>Let's Chat</Button>
           </NavLink>
         </Flex>
 

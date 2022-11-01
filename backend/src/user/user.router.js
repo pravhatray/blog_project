@@ -10,8 +10,14 @@ const Authmiddleware = require("../middleware/Authentication")
 const app = express.Router()
 
 app.get("/", Authmiddleware, async(req, res) => {
-    let a=await UserModel.find()
+    let a=await UserModel.find({},{password:0})
    return  res.send(a)
+})
+
+app.get("/:id",async(req,res)=>{
+    let {id}=req.params
+    let a=await UserModel.findById(id)
+    return res.send(a)
 })
 
 app.post("/signup", async (req, res) => {
@@ -40,7 +46,6 @@ app.post("/refresh", async (req, res) => {
     } catch (er) {
         return res.status(400).send(er)
     }
-
 
 })
 
