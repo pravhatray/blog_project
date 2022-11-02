@@ -14,7 +14,7 @@ const Conversation = ({ data, user }) => {
       let res = await axios
         .get(`http://localhost:8080/users/${userId}`)
         .then((res) => {
-          console.log("user", res.data);
+          // console.log("user", res.data);
           setUserData(res.data);
         });
     } catch (e) {

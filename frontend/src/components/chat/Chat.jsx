@@ -7,16 +7,19 @@ import store from "../../store/store";
 import { useEffect } from "react";
 import axios from "axios";
 import Conversation from "./Conversation";
+import ChatBox from "./ChatBox";
 
 const Chat = () => {
   // const user = useSelector((store) => store.auth);
   // console.log("user",user)
 
   const token = JSON.parse(localStorage.getItem("token"));
-  console.log("chattoken", token._id);
+  // console.log("chattoken", token._id);
 
   const [chats, setChats] = useState([]);
   const [currChat, setcurrChat] = useState(null)
+
+  
 
   const getChats = async (id) => {
     try {
@@ -43,7 +46,7 @@ const Chat = () => {
           <div className="Chat-list">
             {chats.map((c) => {
               return (
-                <div  key={c._id}>
+                <div onClick={()=>setcurrChat(c)} key={c._id}>
                   <Conversation data={c} user={token._id} />
                 </div>
               );
@@ -56,7 +59,7 @@ const Chat = () => {
 
       <div className="Right-side-chat">
         <div>
-
+            <ChatBox chat={currChat} currUser={token._id} />
         </div>
       </div>
     </Box>
