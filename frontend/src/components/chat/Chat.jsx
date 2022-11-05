@@ -8,18 +8,50 @@ import { useEffect } from "react";
 import axios from "axios";
 import Conversation from "./Conversation";
 import ChatBox from "./ChatBox";
+import {io} from "socket.io-client"
+import { useRef } from "react";
 
 const Chat = () => {
-  // const user = useSelector((store) => store.auth);
-  // console.log("user",user)
-
+ 
   const token = JSON.parse(localStorage.getItem("token"));
-  // console.log("chattoken", token._id);
 
   const [chats, setChats] = useState([]);
   const [currChat, setcurrChat] = useState(null)
+  const [onlineUsers, setonlineUsers] = useState([])
+  const [sendMessage,setSendMessage]=useState(null)
+  const [receiveMessage, setReceiveMessage] = useState(null)
+  const socket=useRef()
+
+
+
+  useEffect(()=>{
+    socket.current=io("http://localhost:8800")
+    socket.current.emit("new-user-add",token._id)
+    socket.current.on("get-users",(users)=>{
+      setonlineUsers(users)
+      // console.log("onls",onlineUsers)
+    })
+//put token||user
+  },[])
 
   
+  //send mssg to socket server
+  useEffect(()=>{
+    if(sendMessage!==null)
+    {
+      socket.current.emit("send-message",sendMessage)
+    }
+  },[sendMessage])
+
+  //receive mssg from socket server
+
+  useEffect(()=>{
+    socket.current.on("receive-message",(data)=>{
+      console.log("data received in parent chat",data)
+      setReceiveMessage(data)
+    })
+
+  },[])
 
   const getChats = async (id) => {
     try {
@@ -36,6 +68,13 @@ const Chat = () => {
     getChats(token._id);
   }, []);
 
+  const chechOnlineUsers=(chat)=>{
+    const chatMembers=chat.members.find((member)=>member!==token._id)
+    const online=onlineUsers.find((user)=>user.userId===chatMembers)
+    return online?true:false
+  }
+
+
   return (
     <Box className="Chat">
       {/* Left side */}
@@ -47,7 +86,7 @@ const Chat = () => {
             {chats.map((c) => {
               return (
                 <div onClick={()=>setcurrChat(c)} key={c._id}>
-                  <Conversation data={c} user={token._id} />
+                  <Conversation  online={chechOnlineUsers(c)} data={c} user={token._id} />
                 </div>
               );
             })}
@@ -59,7 +98,7 @@ const Chat = () => {
 
       <div className="Right-side-chat">
         <div>
-            <ChatBox chat={currChat} currUser={token._id} />
+            <ChatBox  receiveMessage={receiveMessage} setSendMessage={setSendMessage} chat={currChat} currUser={token._id} />
         </div>
       </div>
     </Box>
